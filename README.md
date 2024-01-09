@@ -9,6 +9,10 @@ The application is a user management system with CRUD, JWT authentication, user 
 - Alembic
 - PostgreSQL
 - Docker
+- Prometheus
+- Grafana
+- Celery
+- RabbitMQ
 
 # .env example
 You can use the following environment variables to run project
