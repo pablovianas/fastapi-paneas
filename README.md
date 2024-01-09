@@ -10,6 +10,24 @@ The application is a user management system with CRUD, JWT authentication, user 
 - PostgreSQL
 - Docker
 
+# .env example
+You can use the following environment variables to run project
+I'm using gmail smtp service to send emails when users are created, so you need to configure before using it.
+
+```
+DATABASE_URL=postgresql+psycopg2://postgres:paneas@db:5432/user_db
+DB_USER=postgres
+DB_PASSWORD=paneas
+DB_NAME=user_db
+PGADMIN_DEFAULT_EMAIL=admin@admin.com
+PGADMIN_DEFAULT_PASSWORD=admin@paneas
+SECRET_KEY="generate a random secret key"
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+EMAIL_TOKEN= "generate a secret key from gmail service"
+YOUR_GMAIL="use some gmail account"
+```
+
 # How to setup it?
 
 - Download zip aplication from github or use `git clone "url"`
