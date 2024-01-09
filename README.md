@@ -85,4 +85,27 @@ Remove an user from database
 
 Generate JWT access token 
 
+# Using Grafana
+
+- In order to use Grafana, you need to http://localhost:3000/ and login with credentials:
+
+```
+admin
+admin
+```
+
+- Add the datasource Prometheus with those params and click on Save & test:
+
+```
+Name: Prometheus
+URL: http://prometheus:9090
+Access: Server (Default)
+Scrape interval: 15s
+HTTP Method: GET
+HTTP Auth: None
+Basic Auth: None
+With Credentials: No
+TLS Client Auth: None
+TLS CA Certificate: None
+```
 

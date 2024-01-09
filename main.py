@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 from src.routes import users
 from src.routes import auth
-# from .src.routes.users import router
+from prometheus_fastapi_instrumentator import Instrumentator
 
 
 sys.path.append(".") 
@@ -17,6 +17,8 @@ sys.path.append(".")
 load_dotenv(".env")
 
 app = FastAPI()
+
+Instrumentator().instrument(app).expose(app)
 
 app.add_middleware(DBSessionMiddleware, db_url=os.environ["DATABASE_URL"])
 app.include_router(users.router)

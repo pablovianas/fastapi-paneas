@@ -32,3 +32,53 @@ services:
       restart: always
       depends_on:
         - db
+
+    prometheus:
+      container_name: prometheus
+      image: prom/prometheus
+      ports:
+        - 9090:9090
+      volumes:
+        - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      command:
+        - '--config.file=/etc/prometheus/prometheus.yml'
+
+    grafana:
+      container_name: grafana
+      image: grafana/grafana
+      ports:
+        - 3000:3000
+      volumes:
+        - grafana_data:/var/lib/grafana
+
+    rabbitmq:
+      container_name: RabbitMQ
+      image: "rabbitmq:3-management"
+      ports:
+        - "15672:15672"
+        - "5672:5672"
+      environment:
+        RABBITMQ_DEFAULT_USER: guest
+        RABBITMQ_DEFAULT_PASS: guest
+
+    celery:
+      container_name: Celery
+      build: .
+      command: celery -A src.utils.celery worker --loglevel=info
+      depends_on:
+        - rabbitmq
+      environment:
+        - C_FORCE_ROOT=true
+volumes:
+  prometheus_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./prometheus_data
+  grafana_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./grafana_data

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi_sqlalchemy import db
 
 from src.utils.auth import get_current_user
+from src.utils.celery import send_confirmation_email
 
 from ..schema.user import UserSchema, UserUpdateSchema
 from ..models.user import UserModel
@@ -22,16 +23,18 @@ def create(user: UserSchema):
 
   db.session.add(user)
   db.session.commit()
+
+  send_confirmation_email.delay(user.email)
   
   return user
 
 @router.get('/all')
-def get_users():
+async def get_users():
   users = db.session.query(UserModel).all()
   return users
 
 @router.put('/{id}', response_model=UserSchema)
-def update_user(id: int, item: UserUpdateSchema, current_user = Depends(get_current_user)):
+async def update_user(id: int, item: UserUpdateSchema, current_user = Depends(get_current_user)):
     if current_user.role != 'admin':
         raise HTTPException(status_code=401, detail="Unauthorized")
     
@@ -53,7 +56,7 @@ def update_user(id: int, item: UserUpdateSchema, current_user = Depends(get_curr
     return user
 
 @router.delete('/{id}', response_model=UserSchema)
-def delete_user(id: int, item: UserSchema, current_user = Depends(get_current_user)):
+async def delete_user(id: int, current_user = Depends(get_current_user)):
     if current_user.role != 'admin':
         raise HTTPException(status_code=401, detail="Unauthorized")
     
